@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Jost:wght@200;300;400;500;600&display=swap');
+
+:root {
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-jost: 'Jost', Arial, sans-serif;
+  --font-cinzel: 'Cinzel', serif;
+
+  --gold: #c9a84c;
+  --gold-light: #e2c97e;
+  --gold-dim: #8a6f30;
+  --dark: #2a1e0e;
+  --dark-2: #3a2c16;
+  --cream: #f0ebe0;
+  --cream-2: #f5f0e8;
+  --cream-3: #ede8dc;
+  --cream-4: #d4c4a0;
+  --stone: #7a6a50;
+  --border: rgba(201,168,76,0.2);
+  --border-dim: rgba(201,168,76,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream-2);
+  color: var(--dark);
+  font-family: var(--font-jost);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-up { animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-fade-in { animation: fadeIn 0.8s ease both; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+
+.btn-gold {
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  padding: 14px 40px;
+  font-family: var(--font-jost);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-gold:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.3);
+}
+
+.btn-outline {
+  background: none;
+  color: var(--stone);
+  border: 1px solid rgba(100,70,20,0.35);
+  padding: 14px 40px;
+  font-family: var(--font-jost);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-outline-light {
+  background: none;
+  color: var(--cream-4);
+  border: 1px solid rgba(201,168,76,0.35);
+  padding: 14px 40px;
+  font-family: var(--font-jost);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-outline-light:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}

@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── PRODUCT ────────────────────────────────────────────────
+model Product {
+  id            String    @id @default(cuid())
+  name          String
+  nameNo        String
+  slug          String    @unique
+  description   String    @db.Text
+  descriptionNo String    @db.Text
+  price         Float
+  priceNok      Float?
+  categoryId    String
+  category      Category  @relation(fields: [categoryId], references: [id])
+  brandId       String?
+  brand         Brand?    @relation(fields: [brandId], references: [id])
+  colors        Color[]
+  sizes         Size[]
+  images        Image[]
+  badge         String?
+  texture       String    @default("wood")
+  stock         Int       @default(0)
+  featured      Boolean   @default(false)
+  active        Boolean   @default(true)
+  orderItems    OrderItem[]
+  cartItems     CartItem[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  nameNo      String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  products    Product[]
+  order       Int       @default(0)
+  active      Boolean   @default(true)
+}
+
+model Brand {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  logoUrl     String?
+  country     String?
+  website     String?
+  description String?   @db.Text
+  featured    Boolean   @default(false)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+model Color {
+  id        String  @id @default(cuid())
+  name      String
+  nameNo    String?
+  hex       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Size {
+  id        String  @id @default(cuid())
+  label     String
+  width     Float?
+  length    Float?
+  thickness Float?
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String?
+  order     Int     @default(0)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// ─── USER ───────────────────────────────────────────────────
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  role          Role      @default(CUSTOMER)
+  orders        Order[]
+  cart          Cart?
+  addresses     Address[]
+  createdAt     DateTime  @default(now())
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  EDITOR
+}
+
+// ─── CART ───────────────────────────────────────────────────
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String?    @unique
+  user      User?      @relation(fields: [userId], references: [id])
+  sessionId String?    @unique
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  colorId   String?
+  sizeId    String?
+  quantity  Float
+  m2        Float?
+}
+
+// ─── ORDER ──────────────────────────────────────────────────
+model Order {
+  id              String      @id @default(cuid())
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  email           String
+  status          OrderStatus @default(PENDING)
+  items           OrderItem[]
+  subtotal        Float
+  shipping        Float       @default(0)
+  tax             Float       @default(0)
+  total           Float
+  currency        String      @default("EUR")
+  stripePaymentId String?
+  shippingAddress Address?    @relation(fields: [addressId], references: [id])
+  addressId       String?
+  notes           String?
+  trackingNumber  String?
+  locale          String      @default("en")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  price     Float
+  quantity  Float
+  m2        Float?
+  colorName String?
+  sizeName  String?
+}
+
+// ─── ADDRESS ────────────────────────────────────────────────
+model Address {
+  id         String  @id @default(cuid())
+  userId     String?
+  user       User?   @relation(fields: [userId], references: [id])
+  name       String
+  company    String?
+  line1      String
+  line2      String?
+  city       String
+  state      String?
+  zip        String
+  country    String  @default("NO")
+  phone      String?
+  isDefault  Boolean @default(false)
+  orders     Order[]
+}
