@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
 
 export async function GET(req: NextRequest) {
   try {
+    const { prisma } = await import('@/lib/prisma')
     const { searchParams } = new URL(req.url)
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
@@ -29,12 +29,24 @@ export async function GET(req: NextRequest) {
         where, orderBy,
         skip: (page - 1) * pageSize,
         take: pageSize,
-        include: { category: true, brand: true, colors: true, sizes: true, images: { orderBy: { order: 'asc' } } },
+        include: {
+          category: true,
+          brand: true,
+          colors: true,
+          sizes: true,
+          images: { orderBy: { order: 'asc' } },
+        },
       }),
       prisma.product.count({ where }),
     ])
 
-    return NextResponse.json({ data: products, total, page, pageSize, totalPages: Math.ceil(total / pageSize) })
+    return NextResponse.json({
+      data: products,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    })
   } catch (error) {
     console.error('[PRODUCTS GET]', error)
     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 })
@@ -43,19 +55,29 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const { prisma } = await import('@/lib/prisma')
     const body = await req.json()
+
     const product = await prisma.product.create({
       data: {
-        name: body.name, nameNo: body.nameNo, slug: body.slug,
-        description: body.description, descriptionNo: body.descriptionNo,
-        price: body.price, categoryId: body.categoryId, brandId: body.brandId,
-        texture: body.texture, badge: body.badge, stock: body.stock ?? 0,
+        name: body.name,
+        nameNo: body.nameNo,
+        slug: body.slug,
+        description: body.description,
+        descriptionNo: body.descriptionNo,
+        price: body.price,
+        categoryId: body.categoryId,
+        brandId: body.brandId,
+        texture: body.texture,
+        badge: body.badge,
+        stock: body.stock ?? 0,
         featured: body.featured ?? false,
         colors: { create: body.colors ?? [] },
         sizes: { create: body.sizes ?? [] },
       },
       include: { category: true, colors: true, sizes: true },
     })
+
     return NextResponse.json({ data: product }, { status: 201 })
   } catch (error) {
     console.error('[PRODUCTS POST]', error)
