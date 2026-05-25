@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,6 +9,9 @@ export async function POST(req: NextRequest) {
     const shipping = subtotal >= 500 ? 0 : 25
     const tax = subtotal * 0.25
     const total = subtotal + shipping + tax
+
+    // Prisma import dinamik yapıldı - build hatası önlemek için
+    const { prisma } = await import('@/lib/prisma')
 
     const order = await prisma.order.create({
       data: {
@@ -45,5 +47,20 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('[ORDERS POST]', error)
     return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const { prisma } = await import('@/lib/prisma')
+    const orders = await prisma.order.findMany({
+      include: { items: true, shippingAddress: true },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    })
+    return NextResponse.json({ data: orders })
+  } catch (error) {
+    console.error('[ORDERS GET]', error)
+    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 })
   }
 }
