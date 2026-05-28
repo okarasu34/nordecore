@@ -8,7 +8,7 @@ cloudinary.config({
 
 export { cloudinary }
 
-export async function uploadImage(file: string, folder = 'Nordecore/products') {
+export async function uploadImage(file: string, folder = 'Deconor/products') {
   const result = await cloudinary.uploader.upload(file, {
     folder,
     transformation: [

@@ -32,7 +32,7 @@ export default function CartDrawer() {
         {/* Header */}
         <div style={{ padding: '24px 28px', borderBottom: '1px solid rgba(201,168,76,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#2a1e0e' }}>
           <div>
-            <div style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.1rem', letterSpacing: '0.3em', color: '#c9a84c' }}>Nordecore</div>
+            <div style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.1rem', letterSpacing: '0.3em', color: '#c9a84c' }}>Deconor</div>
             <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.58rem', letterSpacing: '0.2em', color: '#888', textTransform: 'uppercase', marginTop: 2 }}>
               {t(`${itemCount} item${itemCount !== 1 ? 's' : ''}`, `${itemCount} vare${itemCount !== 1 ? 'r' : ''}`)}
             </div>

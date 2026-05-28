@@ -76,6 +76,6 @@ export const useCartStore = create<CartStore>()(
       get itemCount() { return get().items.reduce((sum, i) => sum + i.quantity, 0) },
       get subtotal() { return get().items.reduce((sum, i) => sum + i.product.price * i.quantity, 0) },
     }),
-    { name: 'Nordecore-cart', skipHydration: true }
+    { name: 'Deconor-cart', skipHydration: true }
   )
 )

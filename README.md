@@ -1,4 +1,4 @@
-# Nordecore — Premium Surface Materials
+# Deconor — Premium Surface Materials
 
 E-commerce platform for premium building materials. Built with Next.js 14, Prisma, Stripe, and AI room visualization.
 
@@ -17,8 +17,8 @@ E-commerce platform for premium building materials. Built with Next.js 14, Prism
 
 ### 2. Projeyi klonla
 ```bash
-git clone https://github.com/YOUR_USERNAME/Nordecore.git
-cd Nordecore
+git clone https://github.com/YOUR_USERNAME/Deconor.git
+cd Deconor
 npm install
 ```
 
@@ -69,7 +69,7 @@ Tarayıcıda aç: http://localhost:3000
 ## 📁 Proje Yapısı
 
 ```
-Nordecore/
+Deconor/
 ├── src/
 │   ├── app/
 │   │   ├── api/

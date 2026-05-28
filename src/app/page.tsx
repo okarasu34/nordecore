@@ -1,9 +1,80 @@
-import { prisma } from '@/lib/prisma'
 import Navbar from '@/components/layout/Navbar'
 import VideoHero from '@/components/layout/VideoHero'
 import StatsBar from '@/components/layout/StatsBar'
 import CartDrawer from '@/components/cart/CartDrawer'
 import ProductCard from '@/components/product/ProductCard'
+
+const MOCK_PRODUCTS = [
+  {
+    id: '1', name: 'Nordic Oak — Wide Plank', nameNo: 'Nordisk Eik — Bred Planke',
+    slug: 'nordic-oak-wide-plank',
+    description: 'Brushed solid oak with natural grain variation. Available in 5 finishes, compatible with underfloor heating.',
+    descriptionNo: 'Børstet massiv eik med naturlig kornvariasjon.',
+    price: 89,
+    category: { id: '1', name: 'Wood Cladding', nameNo: 'Trekledning', slug: 'wood-cladding', order: 1 },
+    colors: [{ id: 'c1', name: 'Natural Oak', hex: '#8B6040' }, { id: 'c2', name: 'Dark Walnut', hex: '#4A3020' }, { id: 'c3', name: 'Light Ash', hex: '#C8B090' }, { id: 'c4', name: 'Smoked Oak', hex: '#6A5030' }],
+    sizes: [], images: [], badge: 'Bestseller', texture: 'wood', stock: 100, featured: true, active: true, createdAt: '',
+  },
+  {
+    id: '2', name: 'Calacatta Gold — Slab', nameNo: 'Calacatta Gull — Plate',
+    slug: 'calacatta-gold-slab',
+    description: 'High-pressure laminate marble-look panels. Waterproof and heat resistant up to 180°C.',
+    descriptionNo: 'Høytrykklaminatplater. Vanntett og varmebestandig.',
+    price: 124,
+    category: { id: '2', name: 'Marble Panels', nameNo: 'Marmorplater', slug: 'marble-panels', order: 2 },
+    colors: [{ id: 'c5', name: 'White Gold', hex: '#D4C8B0' }, { id: 'c6', name: 'Black', hex: '#2A2820' }, { id: 'c7', name: 'Grey', hex: '#8A8070' }],
+    sizes: [], images: [], badge: 'New', texture: 'marble', stock: 50, featured: true, active: true, createdAt: '',
+  },
+  {
+    id: '3', name: 'Herringbone Oak — Classic', nameNo: 'Fiskebein Eik — Klassisk',
+    slug: 'herringbone-oak-classic',
+    description: 'Engineered 3-layer herringbone parquet. Compatible with all underfloor heating systems.',
+    descriptionNo: 'Konstruert 3-lags fiskebeinparkett.',
+    price: 76,
+    category: { id: '3', name: 'Parquet', nameNo: 'Parkett', slug: 'parquet', order: 3 },
+    colors: [{ id: 'c8', name: 'Honey', hex: '#6A4820' }, { id: 'c9', name: 'Sand', hex: '#9A7840' }, { id: 'c10', name: 'Espresso', hex: '#3A2810' }],
+    sizes: [], images: [], badge: 'Popular', texture: 'herringbone', stock: 75, featured: true, active: true, createdAt: '',
+  },
+  {
+    id: '4', name: 'Arctic Grey — LVT Click', nameNo: 'Arktisk Grå — LVT Klikk',
+    slug: 'arctic-grey-lvt-click',
+    description: '4.5mm SPC rigid core luxury vinyl tile. 100% waterproof.',
+    descriptionNo: '4,5mm SPC stiv kjerne luksusvinylflise.',
+    price: 48,
+    category: { id: '4', name: 'Luxury Vinyl', nameNo: 'Luksusvinyl', slug: 'luxury-vinyl', order: 4 },
+    colors: [{ id: 'c11', name: 'Arctic Grey', hex: '#8A9AA8' }, { id: 'c12', name: 'Storm', hex: '#4A5A68' }, { id: 'c13', name: 'Frost', hex: '#C8D0D8' }],
+    sizes: [], images: [], badge: null, texture: 'vinyl', stock: 200, featured: true, active: true, createdAt: '',
+  },
+  {
+    id: '5', name: 'Nero Marquina — Matte', nameNo: 'Nero Marquina — Matt',
+    slug: 'nero-marquina-matte',
+    description: 'Deep black marble-look panel with fine gold veining.',
+    descriptionNo: 'Dypt svart marmorlignende plate med fin gullåring.',
+    price: 156,
+    category: { id: '2', name: 'Marble Panels', nameNo: 'Marmorplater', slug: 'marble-panels', order: 2 },
+    colors: [{ id: 'c14', name: 'Jet Black', hex: '#1a1a18' }, { id: 'c15', name: 'Warm Black', hex: '#2A2015' }],
+    sizes: [], images: [], badge: 'Exclusive', texture: 'blackmarble', stock: 30, featured: true, active: true, createdAt: '',
+  },
+  {
+    id: '6', name: 'American Walnut — Smoked', nameNo: 'Amerikansk Valnøtt — Røkt',
+    slug: 'american-walnut-smoked',
+    description: 'Thermally modified American walnut. Rich dark tone for interior walls.',
+    descriptionNo: 'Termisk modifisert amerikansk valnøtt.',
+    price: 112,
+    category: { id: '1', name: 'Wood Cladding', nameNo: 'Trekledning', slug: 'wood-cladding', order: 1 },
+    colors: [{ id: 'c16', name: 'Dark Smoke', hex: '#3A2010' }, { id: 'c17', name: 'Ebony', hex: '#201008' }, { id: 'c18', name: 'Cognac', hex: '#5A3820' }],
+    sizes: [], images: [], badge: null, texture: 'walnut', stock: 60, featured: true, active: true, createdAt: '',
+  },
+] as any[]
+
+const CATEGORIES = [
+  { name: 'Wood Cladding', nameNo: 'Trekledning', count: 84, slug: 'wood-cladding', texture: 'wood' },
+  { name: 'Marble Panels', nameNo: 'Marmorplater', count: 62, slug: 'marble-panels', texture: 'marble' },
+  { name: 'Parquet', nameNo: 'Parkett', count: 58, slug: 'parquet', texture: 'herringbone' },
+  { name: 'Luxury Vinyl', nameNo: 'Luksusvinyl', count: 47, slug: 'luxury-vinyl', texture: 'vinyl' },
+  { name: 'Stone Tiles', nameNo: 'Steinfliser', count: 38, slug: 'stone-tiles', texture: 'stone' },
+  { name: 'Exterior Cladding', nameNo: 'Utvendig kledning', count: 31, slug: 'exterior-cladding', texture: 'exterior' },
+]
 
 const TEXTURE_STYLES: Record<string, { bg: string; overlay: string }> = {
   wood:        { bg: 'linear-gradient(160deg,#4a3218,#6a4a28,#3a2410)', overlay: 'repeating-linear-gradient(170deg,transparent 0,rgba(210,155,70,0.07) 2px,transparent 4px,transparent 32px)' },
@@ -16,61 +87,12 @@ const TEXTURE_STYLES: Record<string, { bg: string; overlay: string }> = {
   walnut:      { bg: 'linear-gradient(160deg,#2e2018,#3e2a18,#221408)', overlay: 'repeating-linear-gradient(172deg,transparent 0,rgba(160,100,35,0.1) 2px,transparent 4px,transparent 28px)' },
 }
 
-async function getProducts() {
-  try {
-    const products = await prisma.product.findMany({
-      where: { active: true, featured: true },
-      include: {
-        category: true,
-        brand: true,
-        colors: true,
-        sizes: true,
-        images: { orderBy: { order: 'asc' } },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 6,
-    })
-    return products
-  } catch (error) {
-    console.error('Failed to fetch products:', error)
-    return []
-  }
-}
-
-async function getCategories() {
-  try {
-    const categories = await prisma.category.findMany({
-      where: { active: true },
-      orderBy: { order: 'asc' },
-    })
-    return categories
-  } catch (error) {
-    console.error('Failed to fetch categories:', error)
-    return []
-  }
-}
-
-const CATEGORY_TEXTURES: Record<string, string> = {
-  'wood-cladding': 'wood',
-  'marble-panels': 'marble',
-  'parquet': 'herringbone',
-  'luxury-vinyl': 'vinyl',
-  'stone-tiles': 'stone',
-  'exterior-cladding': 'exterior',
-}
-
-export default async function HomePage() {
-  const [products, categories] = await Promise.all([getProducts(), getCategories()])
-
+export default function HomePage() {
   return (
     <>
       <Navbar />
       <CartDrawer />
-
-      {/* Hero */}
       <VideoHero />
-
-      {/* Stats */}
       <StatsBar />
 
       {/* Kategoriler */}
@@ -85,49 +107,42 @@ export default async function HomePage() {
         <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.76rem', color: '#7a6a50', lineHeight: 2, maxWidth: 440, marginBottom: 44 }}>
           Six distinct material families — from the warmth of solid oak to the drama of black marble.
         </div>
-
-        {categories.length > 0 && (
-          <>
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 3, height: 280, marginBottom: 3 }}>
-              {categories.slice(0, 3).map((cat) => {
-                const textureKey = CATEGORY_TEXTURES[cat.slug] ?? 'wood'
-                const t = TEXTURE_STYLES[textureKey]
-                return (
-                  <a key={cat.slug} href={`/category/${cat.slug}`} style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', display: 'block', textDecoration: 'none' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: t.bg }}>
-                      <div style={{ position: 'absolute', inset: 0, backgroundImage: t.overlay }} />
-                    </div>
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent 30%,rgba(16,10,4,0.85) 100%)' }} />
-                    <div style={{ position: 'absolute', top: 12, right: 12, width: 26, height: 26, border: '1px solid rgba(201,168,76,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontSize: '11px' }}>↗</div>
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 22px' }}>
-                      <div style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.5rem', fontWeight: 300, color: '#faf8f4' }}>{cat.name}</div>
-                      <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', letterSpacing: '0.25em', color: '#c9a84c', textTransform: 'uppercase', marginTop: 4 }}>View Collection</div>
-                    </div>
-                  </a>
-                )
-              })}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3, height: 120 }}>
-              {categories.slice(3, 6).map((cat) => {
-                const textureKey = CATEGORY_TEXTURES[cat.slug] ?? 'wood'
-                const t = TEXTURE_STYLES[textureKey]
-                return (
-                  <a key={cat.slug} href={`/category/${cat.slug}`} style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', display: 'block', textDecoration: 'none' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: t.bg }}>
-                      <div style={{ position: 'absolute', inset: 0, backgroundImage: t.overlay }} />
-                    </div>
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent 20%,rgba(16,10,4,0.85) 100%)' }} />
-                    <div style={{ position: 'absolute', top: 10, right: 10, width: 22, height: 22, border: '1px solid rgba(201,168,76,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontSize: '10px' }}>↗</div>
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 14px' }}>
-                      <div style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.2rem', fontWeight: 300, color: '#faf8f4' }}>{cat.name}</div>
-                      <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.52rem', letterSpacing: '0.2em', color: '#c9a84c', textTransform: 'uppercase', marginTop: 2 }}>View</div>
-                    </div>
-                  </a>
-                )
-              })}
-            </div>
-          </>
-        )}
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 3, height: 280, marginBottom: 3 }}>
+          {CATEGORIES.slice(0, 3).map((cat) => {
+            const t = TEXTURE_STYLES[cat.texture]
+            return (
+              <a key={cat.slug} href={`/category/${cat.slug}`} style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', display: 'block', textDecoration: 'none' }}>
+                <div style={{ position: 'absolute', inset: 0, background: t.bg }}>
+                  <div style={{ position: 'absolute', inset: 0, backgroundImage: t.overlay }} />
+                </div>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent 30%,rgba(16,10,4,0.85) 100%)' }} />
+                <div style={{ position: 'absolute', top: 12, right: 12, width: 26, height: 26, border: '1px solid rgba(201,168,76,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontSize: '11px' }}>↗</div>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 22px' }}>
+                  <div style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.5rem', fontWeight: 300, color: '#faf8f4' }}>{cat.name}</div>
+                  <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', letterSpacing: '0.25em', color: '#c9a84c', textTransform: 'uppercase', marginTop: 4 }}>{cat.count} products</div>
+                </div>
+              </a>
+            )
+          })}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3, height: 120 }}>
+          {CATEGORIES.slice(3).map((cat) => {
+            const t = TEXTURE_STYLES[cat.texture]
+            return (
+              <a key={cat.slug} href={`/category/${cat.slug}`} style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', display: 'block', textDecoration: 'none' }}>
+                <div style={{ position: 'absolute', inset: 0, background: t.bg }}>
+                  <div style={{ position: 'absolute', inset: 0, backgroundImage: t.overlay }} />
+                </div>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent 20%,rgba(16,10,4,0.85) 100%)' }} />
+                <div style={{ position: 'absolute', top: 10, right: 10, width: 22, height: 22, border: '1px solid rgba(201,168,76,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9a84c', fontSize: '10px' }}>↗</div>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 14px' }}>
+                  <div style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.2rem', fontWeight: 300, color: '#faf8f4' }}>{cat.name}</div>
+                  <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.52rem', letterSpacing: '0.2em', color: '#c9a84c', textTransform: 'uppercase', marginTop: 2 }}>{cat.count} products</div>
+                </div>
+              </a>
+            )
+          })}
+        </div>
       </section>
 
       {/* Ürünler */}
@@ -146,16 +161,9 @@ export default async function HomePage() {
             View All →
           </a>
         </div>
-
-        {products.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3 }}>
-            {products.map((p) => <ProductCard key={p.id} product={p as any} />)}
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: 'var(--font-cormorant)', fontSize: '1.5rem', color: '#8a7a60' }}>
-            No products found
-          </div>
-        )}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 3 }}>
+          {MOCK_PRODUCTS.map((p) => <ProductCard key={p.id} product={p} />)}
+        </div>
       </section>
 
       {/* Featured Banner */}
@@ -163,7 +171,7 @@ export default async function HomePage() {
         <div style={{ padding: '80px 60px', background: '#f0ebe0' }}>
           <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.58rem', letterSpacing: '0.45em', textTransform: 'uppercase', color: '#c9a84c', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 14 }}>
             <span style={{ width: 26, height: 1, background: '#c9a84c', display: 'block' }} />
-            The Nordecore Standard
+            The Deconor Standard
           </div>
           <div style={{ fontFamily: 'var(--font-cormorant)', fontSize: 'clamp(2rem,3.5vw,3rem)', fontWeight: 300, lineHeight: 1.1, color: '#2c1e0a', marginBottom: 16 }}>
             Crafted for<br /><em style={{ fontStyle: 'italic', color: '#c9a84c' }}>Scandinavian</em><br />Interiors
@@ -193,7 +201,7 @@ export default async function HomePage() {
       {/* Footer */}
       <footer style={{ background: '#2a1e0e', padding: '60px', borderTop: '1px solid rgba(201,168,76,0.2)', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 60 }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.5rem', letterSpacing: '0.4em', color: '#c9a84c' }}>NORDECORE</div>
+          <div style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.5rem', letterSpacing: '0.4em', color: '#c9a84c' }}>DECONOR</div>
           <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.68rem', color: '#5a4a30', lineHeight: 2, marginTop: 14, maxWidth: 220 }}>
             Premium surface materials for discerning interiors. Delivered across Europe and Scandinavia.
           </div>
@@ -212,7 +220,7 @@ export default async function HomePage() {
         ))}
       </footer>
       <div style={{ background: '#1e1408', padding: '16px 60px', borderTop: '1px solid rgba(201,168,76,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', letterSpacing: '0.15em' }}>© 2025 NORDECORE — All rights reserved</div>
+        <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', letterSpacing: '0.15em' }}>© 2025 DECONOR — All rights reserved</div>
         <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', display: 'flex', alignItems: 'center', gap: 8 }}>
           Payments secured by <span style={{ background: '#635bff', color: '#fff', padding: '2px 8px', fontSize: '0.5rem', fontWeight: 700 }}>stripe</span>
         </div>

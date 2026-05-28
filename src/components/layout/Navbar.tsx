@@ -6,7 +6,6 @@ import { useLocaleStore } from '@/store/locale'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
   const { itemCount, toggleCart } = useCartStore()
   const { locale, setLocale, t } = useLocaleStore()
 
@@ -21,27 +20,26 @@ export default function Navbar() {
     { href: '/category/wood-cladding', en: 'Wood', no: 'Tre' },
     { href: '/category/marble-panels', en: 'Marble', no: 'Marmor' },
     { href: '/category/luxury-vinyl', en: 'Vinyl', no: 'Vinyl' },
-    { href: '/projects', en: 'Projects', no: 'Prosjekter' },
+    { href: '/visualizer', en: 'Visualizer', no: 'Visualisering' },
     { href: '/about', en: 'About', no: 'Om oss' },
+    { href: '/contact', en: 'Contact', no: 'Kontakt' },
   ]
 
   return (
     <>
-      <nav
-        style={{
-          position: 'fixed', top: 0, width: '100%', zIndex: 1000,
-          background: '#2a1e0e',
-          borderBottom: '1px solid rgba(201,168,76,0.25)',
-          transition: 'all 0.4s',
-          padding: scrolled ? '0 48px' : '0 48px',
-        }}
-      >
+      <nav style={{
+        position: 'fixed', top: 0, width: '100%', zIndex: 1000,
+        background: '#2a1e0e',
+        borderBottom: '1px solid rgba(201,168,76,0.25)',
+        transition: 'all 0.4s',
+        padding: '0 48px',
+      }}>
         <div style={{ height: scrolled ? 52 : 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'height 0.4s' }}>
 
           {/* Logo */}
           <Link href="/" style={{ textDecoration: 'none' }}>
             <div style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.55rem', letterSpacing: '0.45em', color: '#c9a84c', fontWeight: 400, lineHeight: 1 }}>
-              Nordecore
+              Deconor
             </div>
             <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.45rem', letterSpacing: '0.35em', color: '#d4c4a0', textTransform: 'uppercase', marginTop: 2 }}>
               {t('Premium Surface Materials', 'Premium Overflatematerialer')}
@@ -49,7 +47,7 @@ export default function Navbar() {
           </Link>
 
           {/* Nav Links */}
-          <div style={{ display: 'flex', gap: 32 }} className="nav-links-desktop">
+          <div style={{ display: 'flex', gap: 28 }}>
             {links.map((l) => (
               <Link key={l.href} href={l.href} style={{
                 fontFamily: 'var(--font-jost)', textDecoration: 'none',

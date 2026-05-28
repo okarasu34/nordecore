@@ -18,7 +18,7 @@ export const useLocaleStore = create<LocaleStore>()(
       t: (en, no) => (get().locale === 'no' ? no : en),
     }),
     {
-      name: 'nordecore-locale',
+      name: 'Deconor-locale',
       skipHydration: true,
     }
   )

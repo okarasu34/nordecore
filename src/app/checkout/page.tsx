@@ -118,7 +118,7 @@ export default function CheckoutPage() {
         {/* Header */}
         <div style={{ background: '#2a1e0e', padding: '28px 60px', borderBottom: '1px solid rgba(201,168,76,0.2)' }}>
           <div style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.4rem', letterSpacing: '0.4em', color: '#c9a84c', marginBottom: 20 }}>
-            NORDECORE
+            Deconor
           </div>
 
           {/* Steps */}
