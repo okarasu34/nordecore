@@ -1,3 +1,4 @@
+'use client'
 import Navbar from '@/components/layout/Navbar'
 import VideoHero from '@/components/layout/VideoHero'
 import StatsBar from '@/components/layout/StatsBar'
@@ -86,6 +87,44 @@ const TEXTURE_STYLES: Record<string, { bg: string; overlay: string }> = {
   blackmarble: { bg: 'linear-gradient(135deg,#1e1e1c,#2a2820,#161614)', overlay: 'repeating-linear-gradient(132deg,transparent 0,rgba(201,168,76,0.07) 1px,transparent 2px,transparent 95px)' },
   walnut:      { bg: 'linear-gradient(160deg,#2e2018,#3e2a18,#221408)', overlay: 'repeating-linear-gradient(172deg,transparent 0,rgba(160,100,35,0.1) 2px,transparent 4px,transparent 28px)' },
 }
+
+const SOCIAL_LINKS = [
+  {
+    label: 'Instagram', url: 'https://instagram.com/deconor', color: '#E1306C',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E1306C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1.5" fill="#E1306C" stroke="none"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Facebook', url: 'https://facebook.com/deconor', color: '#1877F2',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1877F2" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'YouTube', url: 'https://youtube.com/@deconor', color: '#FF0000',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="#FF0000"/>
+        <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Pinterest', url: 'https://pinterest.com/deconor', color: '#E60023',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#E60023">
+        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.853 0 1.267.64 1.267 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.137-1.867 3.137-4.562 0-2.387-1.715-4.055-4.163-4.055-2.838 0-4.502 2.129-4.502 4.332 0 .857.33 1.776.741 2.279a.3.3 0 0 1 .069.284c-.076.31-.243.995-.276 1.134-.044.183-.145.222-.335.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+      </svg>
+    ),
+  },
+]
 
 export default function HomePage() {
   return (
@@ -205,6 +244,23 @@ export default function HomePage() {
           <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.68rem', color: '#5a4a30', lineHeight: 2, marginTop: 14, maxWidth: 220 }}>
             Premium surface materials for discerning interiors. Delivered across Europe and Scandinavia.
           </div>
+          {/* Sosyal Medya */}
+          <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
+            {SOCIAL_LINKS.map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" title={s.label} style={{
+                width: 36, height: 36,
+                background: 'rgba(201,168,76,0.08)',
+                border: '1px solid rgba(201,168,76,0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1rem', textDecoration: 'none', transition: 'all 0.2s',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(201,168,76,0.2)'; (e.currentTarget as HTMLElement).style.borderColor = '#c9a84c' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(201,168,76,0.08)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.2)' }}
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
         </div>
         {[
           { title: 'Collections', links: ['Wood Cladding', 'Marble Panels', 'Parquet', 'Luxury Vinyl', 'Stone Tiles'] },
@@ -219,10 +275,24 @@ export default function HomePage() {
           </div>
         ))}
       </footer>
+
+      {/* Footer Bottom */}
       <div style={{ background: '#1e1408', padding: '16px 60px', borderTop: '1px solid rgba(201,168,76,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', letterSpacing: '0.15em' }}>© 2025 DECONOR — All rights reserved</div>
-        <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', display: 'flex', alignItems: 'center', gap: 8 }}>
-          Payments secured by <span style={{ background: '#635bff', color: '#fff', padding: '2px 8px', fontSize: '0.5rem', fontWeight: 700 }}>stripe</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ display: 'flex', gap: 16 }}>
+            {SOCIAL_LINKS.map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', textDecoration: 'none', letterSpacing: '0.1em', transition: 'color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c9a84c'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#4a3a28'}
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+          <div style={{ fontFamily: 'var(--font-jost)', fontSize: '0.56rem', color: '#4a3a28', display: 'flex', alignItems: 'center', gap: 8 }}>
+            Payments secured by <span style={{ background: '#635bff', color: '#fff', padding: '2px 8px', fontSize: '0.5rem', fontWeight: 700 }}>stripe</span>
+          </div>
         </div>
       </div>
     </>
